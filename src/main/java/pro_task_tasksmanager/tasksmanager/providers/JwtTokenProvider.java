@@ -11,19 +11,20 @@ import java.security.Key;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret; // JWT-Key von .properties
+    private final Key key;
 
-    Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    public JwtTokenProvider(@Value("${jwt.secret}") String jwtSecret) {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
 
     //Parsing
-    public String getUserNameFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token) //parse
                 .getBody();
-        return claims.getSubject(); // token -> "sub"
+        return Long.parseLong(claims.getSubject());
     }
 
     //Validate

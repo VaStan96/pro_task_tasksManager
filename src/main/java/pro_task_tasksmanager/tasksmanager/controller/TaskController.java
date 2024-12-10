@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -33,7 +35,7 @@ public class TaskController {
     @GetMapping()
     @ResponseBody
     public ResponseEntity<?> getAllTasks() {
-        Optional<List<Task>> tasks = taskService.getAllTasks();
+        Optional<List<TaskResponse>> tasks = taskService.getAllTasks();
         
         if (tasks.isPresent()){
             return ResponseEntity.ok(tasks);
@@ -45,18 +47,18 @@ public class TaskController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<?> getIdTask(@PathVariable Long id) {
-        Optional<Task> task = taskService.getIdTask(id);
+        Optional<TaskResponse> taskResponse = taskService.getIdTask(id);
 
-        if (task.isPresent()){
-            return ResponseEntity.ok(task);
+        if (taskResponse.isPresent()){
+            return ResponseEntity.ok(taskResponse);
         }
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found.");
     }
 
     @PostMapping()
-    public ResponseEntity<?> addTask(@RequestBody Task task) {
-        Boolean load = taskService.addTask(task);
+    public ResponseEntity<?> addTask(@RequestBody TaskRequest taskRequest) {
+        Boolean load = taskService.addTask(taskRequest);
         
         if (load){
             return ResponseEntity.ok().body("Task load successfully.");
@@ -76,8 +78,14 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Task not deleted.");
     }
 
-
-    
-
-    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable Long id) {
+        Boolean change = taskService.changeStatus(id);
+        
+        if (change){
+            return ResponseEntity.ok().body("Status change successfully.");
+        }
+        else
+            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Status not changed.");
+    }  
 }
