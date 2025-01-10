@@ -55,7 +55,7 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // Разрешенные источники
+        config.setAllowedOrigins(List.of("http://localhost")); // Разрешенные источники
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Разрешенные методы
         config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Разрешенные заголовки
         config.setAllowCredentials(true); // Поддержка отправки cookie, если нужно
