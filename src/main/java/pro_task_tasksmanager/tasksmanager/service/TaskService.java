@@ -6,18 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import pro_task_tasksmanager.tasksmanager.Kafka.TaskProducer;
+import pro_task_tasksmanager.tasksmanager.controller.NotificationMessage;
 import pro_task_tasksmanager.tasksmanager.controller.TaskRequest;
 import pro_task_tasksmanager.tasksmanager.controller.TaskResponse;
 import pro_task_tasksmanager.tasksmanager.model.Task;
 import pro_task_tasksmanager.tasksmanager.repository.TaskRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import pro_task_tasksmanager.tasksmanager.Kafka.TaskProducer;
-import pro_task_tasksmanager.tasksmanager.controller.NotificationMessage;
 
 @Service
 public class TaskService{
@@ -37,7 +35,7 @@ public class TaskService{
         }
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        Optional<List<Task>> tasksOptional = taskRepository.findByUserId(userId);
+        Optional<List<Task>> tasksOptional = taskRepository.findByUserIdOrderByIdAsc(userId);
         
         if (tasksOptional.isPresent()){
             List<Task> tasks = tasksOptional.get();

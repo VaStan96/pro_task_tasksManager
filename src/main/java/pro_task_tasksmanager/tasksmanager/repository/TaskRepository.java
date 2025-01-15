@@ -14,7 +14,7 @@ import pro_task_tasksmanager.tasksmanager.model.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long>{
-    Optional<List<Task>> findByUserId(Long userId);
+    Optional<List<Task>> findByUserIdOrderByIdAsc(Long userId);
 
     @Modifying
     @Transactional
