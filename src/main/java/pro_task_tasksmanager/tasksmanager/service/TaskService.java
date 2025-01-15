@@ -14,13 +14,21 @@ import pro_task_tasksmanager.tasksmanager.controller.TaskResponse;
 import pro_task_tasksmanager.tasksmanager.model.Task;
 import pro_task_tasksmanager.tasksmanager.repository.TaskRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import pro_task_tasksmanager.tasksmanager.Kafka.TaskProducer;
+import pro_task_tasksmanager.tasksmanager.controller.NotificationMessage;
+
 @Service
 public class TaskService{
 
     private final TaskRepository taskRepository;
+    private final TaskProducer taskProducer;
 
-    public TaskService(TaskRepository taskRepository){
+    @Autowired
+    public TaskService(TaskRepository taskRepository, TaskProducer taskProducer){
         this.taskRepository = taskRepository;
+        this.taskProducer = taskProducer;
     }
 
     public Optional<List<TaskResponse>> getAllTasks(){
@@ -65,8 +73,18 @@ public class TaskService{
         task.setUserId((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         taskRepository.save(task);
-        if (taskRepository.existsById(task.getId()))
+
+        if (taskRepository.existsById(task.getId())){
+            NotificationMessage notification = new NotificationMessage();
+            notification.setTaskId(task.getId());
+            notification.setTaskName(task.getName());  
+            notification.setMessage("New task created");  
+            notification.setUserId(task.getUserId());  
+            notification.setCreatedAt(task.getCreatedAt());  
+            
+            taskProducer.sendTaskNotification(notification);
             return true;
+        }
         else
             return false;
     }
