@@ -14,7 +14,7 @@ public class NotificationMessage implements Serializable {
         this.taskId = taskId;
         this.taskName = taskName;
         this.message = message;
-        this.userId = userId;
+        this.userId = userId;   
         this.createdAt = createdAt;
     }
 

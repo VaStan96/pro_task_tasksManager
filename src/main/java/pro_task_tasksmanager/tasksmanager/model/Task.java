@@ -1,8 +1,6 @@
 package pro_task_tasksmanager.tasksmanager.model;
 
 import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +35,9 @@ public class Task {
 
     @Column(name = "task_status", nullable = false)
     private String status;
+    
+    @Column(name = "task_is_deleted", nullable = false)
+    private Boolean isDeleted;
        
     //Getters
     public Long getId() {
@@ -67,6 +68,10 @@ public class Task {
         return userId;
     }
 
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
     
     //Setters
     public void setUserId(Long userId) {
@@ -91,6 +96,10 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     
