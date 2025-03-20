@@ -37,7 +37,17 @@ public class TaskProducer {
     }
 
     public void sendTaskDeleteNotification(Object message){
-        kafkaTemplate.send(topicNameDelete, message);
+        logger.info("Attempting to send message to Kafka. Topic: {}, Message: {}", topicNameDelete, message);
+        kafkaTemplate.send(topicNameDelete, message)
+            .thenAccept(sendResult -> {
+                logger.info("Message sent successfully. Topic: {}, Partition: {}, Offset: {}",
+                        sendResult.getRecordMetadata().topic(),
+                        sendResult.getRecordMetadata().partition(),
+                        sendResult.getRecordMetadata().offset());
+            })
+            .exceptionally(ex -> {
+                logger.error("Failed to send message to Kafka. Error: {}", ex.getMessage());
+                return null;
+            });
     }
-
 }

@@ -33,6 +33,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add CORS configuration
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 //.requestMatchers("/api/auth/**").permitAll() // open endpoint
+                .requestMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated() // for any user need auth
             )
             .sessionManagement(sessionManagement -> sessionManagement
